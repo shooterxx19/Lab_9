@@ -1,0 +1,26 @@
+Lab 9 - Linear and Polynomial Regression, Cross-Validation, and Ridge Grid Search
+
+Task 1: Estimate Housing Prices Near Transit
+- Slope: -0.7262 (approx. -0.73 price units per 100 m)
+- Intercept: 45.8514
+- Predicted price at 500 m (distance_100m = 5): 42.22 (10,000 NTD/ping)
+- Explanation: The negative slope (-0.73) shows an inverse relationship: moving further away from the nearest MRT station decreases housing prices. Each additional 100 m reduces the predicted price by about 0.73 units (7,300 New Taiwan dollars per ping).
+
+Task 2: Compare Models for Yacht Resistance
+- Linear Baseline 5-Fold CV RMSEs: [9.52, 9.69, 9.57, 7.64, 8.33] | Mean CV RMSE: 8.95
+- Quadratic (Degree-2) 5-Fold CV RMSEs: [4.76, 4.44, 4.62, 3.31, 3.82] | Mean CV RMSE: 4.19
+- Model Choice: The degree-2 polynomial model is significantly better because its mean CV RMSE (4.19) is more than 50% lower than the linear baseline (8.95), capturing the non-linear relationship between Froude number and residuary resistance.
+
+Task 3: Tune a Concrete Strength Model
+- Dataset split after duplicate removal: 804 training rows, 201 test rows
+- Linear Baseline Mean CV RMSE: 10.20 MPa
+- Top 3 Grid Search Settings:
+  1. degree=3, alpha=1 -> Mean CV RMSE: 6.09 MPa
+  2. degree=3, alpha=0.1 -> Mean CV RMSE: 6.13 MPa
+  3. degree=3, alpha=10 -> Mean CV RMSE: 6.23 MPa
+- Tuned Model Test Performance: Test RMSE = 6.52 MPa | Test MAE = 4.91 MPa
+- Comparison: Tuning polynomial degree and Ridge regularization improved mean CV RMSE from 10.20 MPa down to 6.09 MPa, proving that non-linear terms and ingredient interactions substantially improve strength prediction.
+- Example Degree-2 Interaction Term: Cement Water (cement multiplied by water).
+- Why Scaling Belongs Inside the Pipeline:
+  1. Prevents data leakage: StandardScaler computes mean and standard deviation strictly on the training folds during each CV split before transforming the validation fold.
+  2. Fair Ridge penalty: Higher-degree polynomial terms have much larger numerical scales than linear terms; standardizing ensures Ridge shrinks all coefficients equally.
